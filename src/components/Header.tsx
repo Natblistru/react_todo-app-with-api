@@ -34,7 +34,7 @@ export const Header: React.FC<Props> = ({
 
     const trimmed = inputValue.trim();
 
-    const obgData: AddTodo = {
+    const objData: AddTodo = {
       userId: USER_ID,
       title: trimmed,
       completed: false,
@@ -45,7 +45,7 @@ export const Header: React.FC<Props> = ({
 
       return;
     } else {
-      handleAdd(obgData);
+      handleAdd(objData);
       setErrorMessage('');
     }
   };

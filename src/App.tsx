@@ -19,7 +19,7 @@ import { Main } from './components/Main';
 import { Footer } from './components/Footer';
 import useError from './hooks/UseError';
 
-export enum FiltredValue {
+export enum FilteredValue {
   All = 'All',
   Active = 'Active',
   Completed = 'Completed',
@@ -28,7 +28,7 @@ export enum FiltredValue {
 export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const { errorMessage, setErrorMessage } = useError();
-  const [filter, setfilter] = useState<FiltredValue>(FiltredValue.All);
+  const [filter, setFilter] = useState<FilteredValue>(FilteredValue.All);
   const [isDisableBtn, setIsDisableBtn] = useState(true);
   const [tempTodo, setTempTodo] = useState<Todo | null>(null);
   const [inputValue, setInputValue] = useState('');
@@ -96,9 +96,9 @@ export const App: React.FC = () => {
   const filtredItems = useMemo(() => {
     const filtered = todos.filter(todo => {
       switch (filter) {
-        case FiltredValue.Active:
+        case FilteredValue.Active:
           return !todo.completed;
-        case FiltredValue.Completed:
+        case FilteredValue.Completed:
           return todo.completed;
         default:
           return true;
@@ -108,7 +108,7 @@ export const App: React.FC = () => {
     return tempTodo ? [...filtered, tempTodo] : filtered;
   }, [todos, filter, tempTodo]);
 
-  const sum = todos.filter(todo => !todo.completed);
+  const activeTodos = todos.filter(todo => !todo.completed);
 
   const handleComletedDelete = async () => {
     const completed = filtredItems.filter(todo => todo.completed);
@@ -239,8 +239,8 @@ export const App: React.FC = () => {
         {todos.length !== 0 && (
           <Footer
             isDisableBtn={isDisableBtn}
-            sum={sum}
-            setfilter={setfilter}
+            activeTodos={activeTodos}
+            setFilter={setFilter}
             filter={filter}
             handleComletedDelete={handleComletedDelete}
           />

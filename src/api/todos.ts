@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { PatchTodo, Todo } from '../types/Todo';
+import { PatchTodo, Todo, AddTodo } from '../types/Todo';
 import { client } from '../utils/fetchClients';
 
 export const USER_ID = 2564;
@@ -12,7 +12,7 @@ export const deleteTodos = (id: number) => {
   return client.delete(`/todos/${id}`);
 };
 
-export const addTodos = (newTodo: object): Promise<Todo> => {
+export const addTodos = (newTodo: AddTodo): Promise<Todo> => {
   return client.post(`/todos`, { ...newTodo, userId: USER_ID });
 };
 

@@ -1,31 +1,31 @@
 import classNames from 'classnames';
 import { Todo } from '../types/Todo';
-import { FiltredValue } from '../App';
+import { FilteredValue } from '../App';
 
 interface Props {
   isDisableBtn: boolean;
-  sum: Todo[];
-  setfilter: React.Dispatch<React.SetStateAction<FiltredValue>>;
-  filter: FiltredValue;
+  activeTodos: Todo[];
+  setFilter: React.Dispatch<React.SetStateAction<FilteredValue>>;
+  filter: FilteredValue;
   handleComletedDelete: () => void;
 }
 
 export const Footer: React.FC<Props> = ({
   isDisableBtn,
-  sum,
-  setfilter,
+  activeTodos,
+  setFilter,
   filter,
   handleComletedDelete,
 }) => {
   return (
     <footer className="todoapp__footer" data-cy="Footer">
       <span className="todo-count" data-cy="TodosCounter">
-        {sum.length} items left
+        {activeTodos.length} items left
       </span>
 
       {/* Active link should have the 'selected' class */}
       <nav className="filter" data-cy="Filter">
-        {Object.values(FiltredValue).map(value => (
+        {Object.values(FilteredValue).map(value => (
           <a
             data-cy={`FilterLink${value}`}
             key={value}
@@ -33,7 +33,7 @@ export const Footer: React.FC<Props> = ({
             className={classNames('filter__link', {
               selected: filter === value,
             })}
-            onClick={() => setfilter(value)}
+            onClick={() => setFilter(value)}
           >
             {value}
           </a>

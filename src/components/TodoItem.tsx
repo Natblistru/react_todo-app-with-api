@@ -3,13 +3,13 @@
 import classNames from 'classnames';
 import { Todo } from '../types/Todo';
 
-interface Prop {
+interface Props {
   todo: Todo;
   handleToggle: (id: number) => void;
   handleDelete: (id: number) => void;
   tempTodo: boolean;
   isDelete: boolean;
-  loadingTodoId: boolean;
+  isTodoLoading: boolean;
   startEditing: (id: number | null, currentTitle: string) => void;
   saveTitle: (id: number) => void;
   editingTodoId: number | null;
@@ -17,13 +17,13 @@ interface Prop {
   editingTitle: string;
 }
 
-export const TodoItem: React.FC<Prop> = ({
+export const TodoItem: React.FC<Props> = ({
   todo,
   handleToggle,
   handleDelete,
   tempTodo,
   isDelete,
-  loadingTodoId,
+  isTodoLoading,
   startEditing,
   saveTitle,
   editingTodoId,
@@ -122,7 +122,7 @@ export const TodoItem: React.FC<Prop> = ({
         <div
           data-cy="TodoLoader"
           className={classNames('modal', 'overlay', {
-            'is-active': tempTodo || isDelete || loadingTodoId,
+            'is-active': tempTodo || isDelete || isTodoLoading,
           })}
         >
           <div className="modal-background has-background-white-ter" />
