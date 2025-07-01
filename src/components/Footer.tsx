@@ -1,11 +1,15 @@
+/* eslint-disable import/no-extraneous-dependencies */
+// src/components/Footer.tsx
+import React from 'react';
 import classNames from 'classnames';
-import { Todo } from '../types/Todo';
-import { FilteredValue } from '../App';
+import PropTypes from 'prop-types';
+import { FilteredValue } from '../types/FilteredValue';
+import { Filter } from './Filter';
 
 interface Props {
   isDisableBtn: boolean;
-  activeTodos: Todo[];
-  setFilter: React.Dispatch<React.SetStateAction<FilteredValue>>;
+  activeTodos: { id: number }[]; // sau direct number dacă vrei doar count
+  setFilter: (value: FilteredValue) => void;
   filter: FilteredValue;
   handleComletedDelete: () => void;
 }
@@ -20,36 +24,38 @@ export const Footer: React.FC<Props> = ({
   return (
     <footer className="todoapp__footer" data-cy="Footer">
       <span className="todo-count" data-cy="TodosCounter">
-        {activeTodos.length} items left
+        {`${activeTodos.length} items left`}
       </span>
 
-      {/* Active link should have the 'selected' class */}
-      <nav className="filter" data-cy="Filter">
-        {Object.values(FilteredValue).map(value => (
-          <a
-            data-cy={`FilterLink${value}`}
-            key={value}
-            href={`#/${value.toLowerCase()}`}
-            className={classNames('filter__link', {
-              selected: filter === value,
-            })}
-            onClick={() => setFilter(value)}
-          >
-            {value}
-          </a>
-        ))}
-      </nav>
+      <Filter filter={filter} setFilter={setFilter} />
 
-      {/* this button should be disabled if there are no completed todos */}
       <button
         type="button"
-        className="todoapp__clear-completed"
+        className={classNames('todoapp__clear-completed', {
+          'is-disabled': isDisableBtn,
+        })}
         data-cy="ClearCompletedButton"
-        disabled={isDisableBtn}
         onClick={handleComletedDelete}
+        disabled={isDisableBtn}
       >
         Clear completed
       </button>
     </footer>
   );
+};
+
+Footer.propTypes = {
+  isDisableBtn: PropTypes.bool.isRequired,
+  activeTodos: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+    }).isRequired,
+  ).isRequired,
+  setFilter: PropTypes.func.isRequired,
+  filter: PropTypes.oneOf([
+    FilteredValue.All,
+    FilteredValue.Active,
+    FilteredValue.Completed,
+  ]).isRequired,
+  handleComletedDelete: PropTypes.func.isRequired,
 };

@@ -1,15 +1,16 @@
-/* eslint-disable no-console */
-import { AddTodo, Todo } from '../types/Todo';
-import { USER_ID } from '../api/todos';
+/* eslint-disable import/no-extraneous-dependencies */
+import { Todo, AddTodo } from '../types/Todo';
 import classNames from 'classnames';
+import PropTypes from 'prop-types';
 import { useMemo } from 'react';
+import { NewTodo } from './NewTodo';
 
 interface Props {
   handle: () => void;
   handleAdd: (newTodo: AddTodo) => void;
-  setErrorMessage: (args: string) => void;
+  setErrorMessage: (msg: string) => void;
   tempTodo: Todo | null;
-  setInputValue: (args: string) => void;
+  setInputValue: (value: string) => void;
   inputValue: string;
   inputRef: React.RefObject<HTMLInputElement>;
   todos: Todo[];
@@ -25,65 +26,55 @@ export const Header: React.FC<Props> = ({
   inputRef,
   todos,
 }) => {
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
-  };
-
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-
-    const trimmed = inputValue.trim();
-
-    const objData: AddTodo = {
-      userId: USER_ID,
-      title: trimmed,
-      completed: false,
-    };
-
-    if (!trimmed) {
-      setErrorMessage('Title should not be empty');
-
-      return;
-    } else {
-      handleAdd(objData);
-      setErrorMessage('');
-    }
-  };
-
-  const everyComleted = useMemo(
-    () => todos.every(todo => todo.completed === true),
+  const everyCompleted = useMemo(
+    () => todos.length > 0 && todos.every(todo => todo.completed),
     [todos],
   );
 
   return (
-    <>
-      <header className="todoapp__header">
-        {/* this button should have `active` class only if all todos are completed */}
-        {todos.length > 0 && (
-          <button
-            type="button"
-            className={classNames('todoapp__toggle-all', {
-              active: everyComleted,
-            })}
-            data-cy="ToggleAllButton"
-            onClick={handle}
-          />
-        )}
+    <header className="todoapp__header">
+      {todos.length > 0 && (
+        <button
+          type="button"
+          className={classNames('todoapp__toggle-all', {
+            active: everyCompleted,
+          })}
+          data-cy="ToggleAllButton"
+          onClick={handle}
+        />
+      )}
 
-        {/* Add a todo on form submit */}
-        <form onSubmit={handleSubmit}>
-          <input
-            data-cy="NewTodoField"
-            type="text"
-            className="todoapp__new-todo"
-            placeholder="What needs to be done?"
-            value={inputValue}
-            onChange={handleChange}
-            ref={inputRef}
-            disabled={!!tempTodo}
-          />
-        </form>
-      </header>
-    </>
+      <NewTodo
+        handleAdd={handleAdd}
+        setErrorMessage={setErrorMessage}
+        tempTodo={tempTodo}
+        setInputValue={setInputValue}
+        inputValue={inputValue}
+        inputRef={inputRef}
+      />
+    </header>
   );
+};
+
+Header.propTypes = {
+  handle: PropTypes.func.isRequired,
+  handleAdd: PropTypes.func.isRequired,
+  setErrorMessage: PropTypes.func.isRequired,
+  tempTodo: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    userId: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired,
+    completed: PropTypes.bool.isRequired,
+  }),
+  setInputValue: PropTypes.func.isRequired,
+  inputValue: PropTypes.string.isRequired,
+  inputRef: PropTypes.any.isRequired,
+  todos: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      userId: PropTypes.number.isRequired,
+      title: PropTypes.string.isRequired,
+      completed: PropTypes.bool.isRequired,
+    }).isRequired,
+  ).isRequired,
 };

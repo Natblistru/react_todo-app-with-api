@@ -1,4 +1,6 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import classNames from 'classnames';
+import PropTypes from 'prop-types';
 import { useEffect, useLayoutEffect, useState } from 'react';
 
 interface Props {
@@ -53,4 +55,8 @@ export const ErrorNotification: React.FC<Props> = ({ message }) => {
           Unable to update a todo */}
     </div>
   );
+};
+
+ErrorNotification.propTypes = {
+  message: PropTypes.string.isRequired,
 };

@@ -1,9 +1,14 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable no-console */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/control-has-associated-label */
+/* eslint-disable-next-line import/no-extraneous-dependencies */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import classNames from 'classnames';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import PropTypes from 'prop-types';
 import { UserWarning } from './UserWarning';
 import {
   addTodos,
@@ -19,11 +24,7 @@ import { Main } from './components/Main';
 import { Footer } from './components/Footer';
 import useError from './hooks/UseError';
 
-export enum FilteredValue {
-  All = 'All',
-  Active = 'Active',
-  Completed = 'Completed',
-}
+import { FilteredValue } from './types/FilteredValue';
 
 export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -209,7 +210,13 @@ export const App: React.FC = () => {
     <UserWarning />
   ) : (
     <div className="todoapp">
-      <h1 className="todoapp__title">todos</h1>
+      <h1
+        className={classNames('todoapp__title', {
+          'todoapp__title--disabled': todos.length === 0,
+        })}
+      >
+        todos
+      </h1>
 
       <div className="todoapp__content">
         <Header
@@ -251,3 +258,5 @@ export const App: React.FC = () => {
     </div>
   );
 };
+
+App.propTypes = {};
